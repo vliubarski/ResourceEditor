@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ResourceEditor.Controllers
@@ -26,6 +25,21 @@ namespace ResourceEditor.Controllers
 			});
 		}
 
+		[HttpGet("[action]/{lookFor}")]
+		public IEnumerable<Product> Products(string lookFor)
+		{
+			return new List<Product>()
+			{
+				new Product
+				{
+					id = 1, productName = "name",
+					productCode = "code",
+					description = "description",
+					starRating = 3
+				}
+			};
+		}
+
 		public class WeatherForecast
 		{
 			public string DateFormatted { get; set; }
@@ -40,5 +54,15 @@ namespace ResourceEditor.Controllers
 				}
 			}
 		}
+
+		public class Product
+		{
+			public int id { get; set; }
+			public string productName { get; set; }
+			public string productCode { get; set; }
+			public string description { get; set; }
+			public int starRating { get; set; }
+		}
+
 	}
 }
