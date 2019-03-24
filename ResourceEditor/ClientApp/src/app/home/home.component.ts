@@ -8,21 +8,34 @@ import { Product } from '../products/product';
 })
 export class HomeComponent {
   products: Product[];
+  data: Product[];
   errorMessage: string;
 
+  constructor(private resourceService: ResourceService) { }
 
-  constructor(private resourceService: ResourceService) {
-
-  }
-
-  OnClick() {
-    //console.log("clicked !");
-    this.resourceService.getProducts('abc').subscribe(
-      (products: Product[]) => this.products = products,
+  onSearch(lookFor: string = '') {
+    this.resourceService.getProducts(lookFor).subscribe(
+      (data: Product[]) => this.data = data,
       (err: any) => this.errorMessage = err.error
     );
 
   }
 
+  settings = {
+    columns: {
+      id: {
+        title: 'ID'
+      },
+      productName: {
+        title: 'Name'
+      },
+      productCode: {
+        title: 'Code'
+      },
+      starRating: {
+        title: 'Rating'
+      }
+    }
+  };
 }
 

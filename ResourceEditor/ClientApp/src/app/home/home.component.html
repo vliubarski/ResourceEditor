@@ -1,1 +1,21 @@
-<button (click)="OnClick()">Click me</button>
+<input #search class="search" type="text" placeholder="Search..." (keydown.enter)="onSearch(search.value)">
+<hr />
+<ng2-smart-table [settings]="settings" [source]="data"></ng2-smart-table>
+
+<!-- 
+<table>
+    <thead>
+        <th>name</th>
+        <th>code</th>
+        <th>description</th>
+        <th>rating</th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let product of products">
+            <td>{{product.id}}</td>
+            <td>{{product.productName}}</td>
+            <td>{{product.description}}</td>
+            <td>{{product.starRating}}</td>
+        </tr>
+    </tbody>
+</table> -->

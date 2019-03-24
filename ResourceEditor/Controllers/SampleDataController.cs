@@ -28,16 +28,19 @@ namespace ResourceEditor.Controllers
 		[HttpGet("[action]/{lookFor}")]
 		public IEnumerable<Product> Products(string lookFor)
 		{
-			return new List<Product>()
+			var ret = new List<Product>()
 			{
 				new Product
 				{
-					id = 1, productName = "name",
-					productCode = "code",
-					description = "description",
-					starRating = 3
+					id = 1,
+					productName = "Vit	",
+					productCode = "Liub",
+					description = "good",
+					starRating = 5
 				}
 			};
+
+			return ret.Where(x => x.description.Contains(lookFor));
 		}
 
 		public class WeatherForecast
