@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ResourceService } from '../products/resource.service';
-import { Product } from '../products/product';
+import { Product, Filter } from '../products/product';
 
 @Component({
   selector: 'app-home',
@@ -9,9 +9,11 @@ import { Product } from '../products/product';
 export class HomeComponent {
   products: Product[];
   data: Product[];
+  filter: Filter[];
   errorMessage: string;
 
-  constructor(private resourceService: ResourceService) { }
+  constructor(private resourceService: ResourceService) {
+  }
 
   onSearch(lookFor: string = '') {
     this.resourceService.getProducts(lookFor).subscribe(
@@ -19,21 +21,35 @@ export class HomeComponent {
       (err: any) => this.errorMessage = err.error
     );
 
+    let cultureCodes = this.data.map(u => { return { cultureCode: u.cultureCode } });
+    let filter = Array.from(new Set(cultureCodes.map(item => item.cultureCode)))
+      .map(id => { return { title: id, value: id } });
+
+    this.settings.columns.cultureCode.filter.config.list = filter;
+    this.settings = Object.assign({}, this.settings);
   }
 
   settings = {
     columns: {
-      id: {
-        title: 'ID'
+      resourceType: {
+        title: 'Type'
       },
-      productName: {
-        title: 'Name'
+      resourceKey: {
+        title: 'Key', editable: false
       },
-      productCode: {
-        title: 'Code'
+      resourceValue: {
+        title: 'Value'
       },
-      starRating: {
-        title: 'Rating'
+      cultureCode: {
+        with: 100,
+        title: 'Culture Code',
+        filter: {
+          type: 'list',
+          config: {
+            selectText: 'Select...',
+            list: this.filter,
+          },
+        }
       }
     }
   };

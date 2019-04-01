@@ -1,7 +1,11 @@
 export interface Product {
-    id: number | null;
-    productName: string;
-    productCode: string;
-    description: string;
-    starRating: number;
+  resourceType: string;
+  resourceKey: string;
+  resourceValue: string;
+  cultureCode: string;
+}
+
+export interface Filter {
+  value: string;
+  title: string;
 }

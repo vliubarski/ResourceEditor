@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DAL;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ResourceEditor.Controllers
@@ -8,6 +9,13 @@ namespace ResourceEditor.Controllers
 	[Route("api/[controller]")]
 	public class SampleDataController : Controller
 	{
+		private readonly IResourceService _resourceService;
+
+		public SampleDataController(IResourceService resourceService)
+		{
+			_resourceService = resourceService;
+		}
+
 		private static string[] Summaries = new[]
 		{
 			"Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -26,21 +34,29 @@ namespace ResourceEditor.Controllers
 		}
 
 		[HttpGet("[action]/{lookFor}")]
-		public IEnumerable<Product> Products(string lookFor)
+		public IEnumerable<object> Products(string lookFor)
 		{
-			var ret = new List<Product>()
-			{
-				new Product
-				{
-					id = 1,
-					productName = "Vit	",
-					productCode = "Liub",
-					description = "good",
-					starRating = 5
-				}
-			};
+			var resource = _resourceService.GetAnyResource(lookFor);
 
-			return ret.Where(x => x.description.Contains(lookFor));
+			//var ret = new List<object>()
+			//{
+			//	new 
+			//	{
+			//		//id = 1,
+			//		productName = "Vittttttt",
+			//		productCode = "Liub",
+			//		description = "good",
+			//		starRating0 = 5,
+			//		starRating1 = 6,
+			//		starRating2 = 7,
+			//		starRating3 = 8,
+			//		starRating = 9,
+			//		resourceType = "qqq",
+			//		resourceKey = "kkk",
+			//	}
+			//};
+
+			return  resource;//ret;//.Where(x => x.description.Contains(lookFor));
 		}
 
 		public class WeatherForecast

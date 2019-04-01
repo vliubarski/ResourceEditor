@@ -1,3 +1,8 @@
+using DAL;
+using DAL.Connections;
+using DAL.Interfaces;
+using DAL.Repositories;
+using Domain.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,6 +32,11 @@ namespace ResourceEditor
 			{
 				configuration.RootPath = "ClientApp/dist";
 			});
+			services.AddScoped<IResourceService, ResourceService>();
+			services.AddScoped<IResourceRepository, ResourceRepository>();
+			services.AddScoped<IPortalDbConnection, PortalDbConnection>();
+			
+
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
