@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ResourceService } from '../products/resource.service';
 import { Product, Filter } from '../products/product';
+import { LocalDataSource, ServerDataSource } from 'ng2-smart-table';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
@@ -8,14 +10,19 @@ import { Product, Filter } from '../products/product';
 })
 export class HomeComponent {
   products: Product[];
-  data: Product[];
+  data: Product[] =[] ;
   filter: Filter[];
   errorMessage: string;
 
-  constructor(private resourceService: ResourceService) {
+  constructor(private resourceService: ResourceService, http: HttpClient) {
   }
 
   onSearch(lookFor: string = '') {
+    this.resourceService.getProducts(lookFor).subscribe(
+      (data: Product[]) => this.data = data,
+      (err: any) => this.errorMessage = err.error
+    );
+
     this.resourceService.getProducts(lookFor).subscribe(
       (data: Product[]) => this.data = data,
       (err: any) => this.errorMessage = err.error
@@ -29,7 +36,37 @@ export class HomeComponent {
     this.settings = Object.assign({}, this.settings);
   }
 
+  onCreateConfirm(event) {
+    this.resourceService.saveProducts(event.newData).
+      subscribe(data => this.data.push(data));
+  }
+
+  onDeleteConfirm(event) {
+    console.log("Delete Event In Console")
+    console.log(event);
+    if (window.confirm('Are you sure you want to delete?')) {
+      event.confirm.resolve();
+    } else {
+      event.confirm.reject();
+    }
+  }
+
+  onSaveConfirm(event) {
+    console.log("Edit Event In Console")
+    console.log(event);
+    event.confirm.resolve();
+  }
+
   settings = {
+    delete: {
+      confirmDelete: true,
+    },
+    add: {
+      confirmCreate: true,
+    },
+    edit: {
+      confirmSave: true,
+    },
     columns: {
       resourceType: {
         title: 'Type'
@@ -41,7 +78,7 @@ export class HomeComponent {
         title: 'Value'
       },
       cultureCode: {
-        with: 100,
+        width: '150px',
         title: 'Culture Code',
         filter: {
           type: 'list',

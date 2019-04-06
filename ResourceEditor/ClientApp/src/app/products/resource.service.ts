@@ -3,13 +3,14 @@ import { Product } from './product';
 import { Observable, of, BehaviorSubject, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, tap, map } from 'rxjs/operators';
-
+import { RequestOptions } from '@angular/http';
 @Injectable({
   providedIn: 'root'
 })
 export class ResourceService {
-  private products: Product[];
-  private productsUrl = 'api/SampleData/products';
+  //private products: Product[];
+  private getProductsUrl = 'api/SampleData/products';
+  private saveProductsUrl = 'api/SampleData/saveProducts';
 
   constructor(private http: HttpClient) { }
 
@@ -17,12 +18,24 @@ export class ResourceService {
     //if (this.products) {
     //  return of(this.products);
     //}
-    return this.http.get<Product[]>(this.productsUrl+'/'+lookFor)
+    return this.http.get<Product[]>(this.getProductsUrl + '/' + lookFor)
       .pipe(
         tap(data => console.log(JSON.stringify(data))),
-        tap(data => this.products = data),
+        //tap(data => this.products = data),
         catchError(this.handleError)
       );
+  }
+
+  saveProducts(newResource: Product): Observable<Product> {
+    //let headers = new Headers({ 'Content-Type': 'application/json' });
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+
+    return this.http.post<Product>(this.saveProductsUrl, newResource, options)
+      .pipe( catchError(this.handleError) );
   }
 
   private handleError(err) {
@@ -35,9 +48,9 @@ export class ResourceService {
     } else {
       // The backend returned an unsuccessful response code.
       // The response body may contain clues as to what went wrong,
-      errorMessage = `Backend returned code ${err.status}: ${err.body.error}`;
+      errorMessage = `Backend returned code ${err.status}: ${err.message}`;
     }
-    console.error(err);
+    console.error(errorMessage);
     return throwError(errorMessage);
   }
 }

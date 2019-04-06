@@ -33,6 +33,12 @@ namespace ResourceEditor.Controllers
 			});
 		}
 
+		[HttpPost("[action]")]
+		public ActionResult<Product> SaveProducts([FromBody] Product product)
+		{
+			return new ActionResult<Product>(product);
+		}
+
 		[HttpGet("[action]/{lookFor}")]
 		public IEnumerable<object> Products(string lookFor)
 		{
@@ -76,11 +82,10 @@ namespace ResourceEditor.Controllers
 
 		public class Product
 		{
-			public int id { get; set; }
-			public string productName { get; set; }
-			public string productCode { get; set; }
-			public string description { get; set; }
-			public int starRating { get; set; }
+			public string resourceType { get; set; }
+			public string resourceKey { get; set; }
+			public string resourceValue { get; set; }
+			public string cultureCode { get; set; }
 		}
 
 	}
