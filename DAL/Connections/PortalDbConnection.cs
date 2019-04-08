@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using DAL.Interfaces;
@@ -35,18 +34,42 @@ namespace DAL.Connections
 		{
 			string sql = $"select RESOURCE_TYPE as ResourceType, RESOURCE_KEY as ResourceKey, RESOURCE_Value as ResourceValue, CULTURE_CODE as CultureCode from OBI.vu_resources where resource_value like '%{subStr}%'";
 			var cmd = new OracleCommand(sql, _connection) { CommandType = CommandType.Text };
-			var da = new OracleDataAdapter(cmd);
+			var dataAdapter = new OracleDataAdapter(cmd);
 			var ds = new DataSet();
 
 			try
 			{
 				_connection.Open();
-				da.Fill(ds);
+				dataAdapter.Fill(ds);
 			}
 			catch (Exception e)
 			{
 				//log error
 				throw;
+			}
+			finally
+			{
+				_connection.Dispose();
+			}
+			return ds;
+		}
+
+		public DataSet CreateResource(DbResource res)
+		{
+			string sql = $"SELECT obi.dt_update_resource('{res.ResourceType}', '{res.CultureCode}', '{res.ResourceKey}', '{res.ResourceValue}', 1, 1) AS result FROM dual";
+
+			var cmd = new OracleCommand(sql, _connection) { CommandType = CommandType.Text };
+			var dataAdapter = new OracleDataAdapter(cmd);
+			var ds = new DataSet();
+
+			try
+			{
+				_connection.Open();
+				dataAdapter.Fill(ds);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
 			}
 			finally
 			{

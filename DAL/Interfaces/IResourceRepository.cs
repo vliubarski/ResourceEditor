@@ -11,7 +11,6 @@ namespace DAL.Interfaces
 	public interface IResourceRepository
 	{
 		IEnumerable<DbResource> GetResourceByString(string str);
-		//Task<IEnumerable<DbResource>> GetResourceByString(string str);
-
+		DbResource CreateResource(DbResource subStr);
 	}
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DAL;
+using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ResourceEditor.Controllers
@@ -34,35 +35,16 @@ namespace ResourceEditor.Controllers
 		}
 
 		[HttpPost("[action]")]
-		public ActionResult<Product> SaveProducts([FromBody] Product product)
+		public ActionResult<DbResource> CreateResource([FromBody] DbResource newResource)
 		{
-			return new ActionResult<Product>(product);
+			var  ret = _resourceService.CreateResource(newResource);
+			return new ActionResult<DbResource>(ret);
 		}
 
 		[HttpGet("[action]/{lookFor}")]
 		public IEnumerable<object> Products(string lookFor)
 		{
-			var resource = _resourceService.GetAnyResource(lookFor);
-
-			//var ret = new List<object>()
-			//{
-			//	new 
-			//	{
-			//		//id = 1,
-			//		productName = "Vittttttt",
-			//		productCode = "Liub",
-			//		description = "good",
-			//		starRating0 = 5,
-			//		starRating1 = 6,
-			//		starRating2 = 7,
-			//		starRating3 = 8,
-			//		starRating = 9,
-			//		resourceType = "qqq",
-			//		resourceKey = "kkk",
-			//	}
-			//};
-
-			return  resource;//ret;//.Where(x => x.description.Contains(lookFor));
+			return _resourceService.GetAnyResource(lookFor);
 		}
 
 		public class WeatherForecast
@@ -79,14 +61,5 @@ namespace ResourceEditor.Controllers
 				}
 			}
 		}
-
-		public class Product
-		{
-			public string resourceType { get; set; }
-			public string resourceKey { get; set; }
-			public string resourceValue { get; set; }
-			public string cultureCode { get; set; }
-		}
-
 	}
 }

@@ -8,5 +8,6 @@ namespace DAL.Interfaces
 	{
 		//IEnumerable<DbResource> GetResourceByString(string str);
 		DataSet GetResourceByString(string str);
+		DataSet CreateResource(DbResource subStr);
 	}
 }

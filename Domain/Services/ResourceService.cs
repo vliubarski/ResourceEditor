@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using DAL;
 using DAL.Interfaces;
+using DAL.Models;
 
 namespace Domain.Services
 {
@@ -16,6 +17,11 @@ namespace Domain.Services
 		public IEnumerable<object> GetAnyResource(string subString)
 		{
 			return _repository.GetResourceByString(subString);
+		}
+
+		public DbResource CreateResource(DbResource newResource)
+		{
+			return _repository.CreateResource(newResource);
 		}
 	}
 }

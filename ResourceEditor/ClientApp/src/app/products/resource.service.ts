@@ -10,14 +10,12 @@ import { RequestOptions } from '@angular/http';
 export class ResourceService {
   //private products: Product[];
   private getProductsUrl = 'api/SampleData/products';
-  private saveProductsUrl = 'api/SampleData/saveProducts';
+  private saveProductsUrl = 'api/SampleData/createResource';
+  private deleteProductsUrl = 'api/SampleData/deleteResource';
 
   constructor(private http: HttpClient) { }
 
   getProducts(lookFor: string): Observable<Product[]> {
-    //if (this.products) {
-    //  return of(this.products);
-    //}
     return this.http.get<Product[]>(this.getProductsUrl + '/' + lookFor)
       .pipe(
         tap(data => console.log(JSON.stringify(data))),
@@ -26,16 +24,20 @@ export class ResourceService {
       );
   }
 
-  saveProducts(newResource: Product): Observable<Product> {
-    //let headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
+  createResource(newResource: Product): Observable<Product> {
+    const options = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
 
     return this.http.post<Product>(this.saveProductsUrl, newResource, options)
-      .pipe( catchError(this.handleError) );
+      .pipe(catchError(this.handleError));
+
+  }
+
+  deleteResource(deletingResource: Product): Observable<Product> {
+    const options = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
+
+    return this.http.post<Product>(this.deleteProductsUrl, deletingResource, options)
+      .pipe(catchError(this.handleError));
+
   }
 
   private handleError(err) {

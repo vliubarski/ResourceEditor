@@ -1,8 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ResourceService } from '../products/resource.service';
 import { Product, Filter } from '../products/product';
-import { LocalDataSource, ServerDataSource } from 'ng2-smart-table';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
@@ -10,26 +8,24 @@ import { HttpClient } from '@angular/common/http';
 })
 export class HomeComponent {
   products: Product[];
-  data: Product[] =[] ;
+  data: Product[] = [];
   filter: Filter[];
   errorMessage: string;
 
-  constructor(private resourceService: ResourceService, http: HttpClient) {
+  constructor(private resourceService: ResourceService) {
   }
 
   onSearch(lookFor: string = '') {
     this.resourceService.getProducts(lookFor).subscribe(
-      (data: Product[]) => this.data = data,
+      (data: Product[]) => { this.data = data; this.populateFilter(); },
       (err: any) => this.errorMessage = err.error
     );
+  }
 
-    this.resourceService.getProducts(lookFor).subscribe(
-      (data: Product[]) => this.data = data,
-      (err: any) => this.errorMessage = err.error
-    );
-
+  populateFilter() {
     let cultureCodes = this.data.map(u => { return { cultureCode: u.cultureCode } });
-    let filter = Array.from(new Set(cultureCodes.map(item => item.cultureCode)))
+    let filter = Array
+      .from(new Set(cultureCodes.map(item => item.cultureCode)))
       .map(id => { return { title: id, value: id } });
 
     this.settings.columns.cultureCode.filter.config.list = filter;
@@ -37,22 +33,46 @@ export class HomeComponent {
   }
 
   onCreateConfirm(event) {
-    this.resourceService.saveProducts(event.newData).
-      subscribe(data => this.data.push(data));
+    this.resourceService.createResource(event.newData).subscribe(
+      (data: Product) => {
+        if (this.validated(data)) {
+          //this.data.push(data); //this.populateFilter();
+          event.confirm.resolve(event.newData);
+        } 
+      },
+      (err: any) => this.errorMessage = err.error
+    );
+  }
+
+  validated(data: Product): boolean {
+    if (data.resourceKey !== null) {
+      return true;
+    }
+    return false;
   }
 
   onDeleteConfirm(event) {
-    console.log("Delete Event In Console")
-    console.log(event);
-    if (window.confirm('Are you sure you want to delete?')) {
-      event.confirm.resolve();
-    } else {
-      event.confirm.reject();
-    }
+    this.resourceService.createResource(event.newData).subscribe(
+      (data: Product) => {
+        if (this.validated(data)) {
+          //this.data.push(data); //this.populateFilter();
+          event.confirm.resolve(event.newData);
+        }
+      },
+      (err: any) => this.errorMessage = err.error
+    );
+
+    //console.log("Delete Event In Console");
+    //console.log(event);
+    //if (window.confirm('Are you sure you want to delete?')) {
+    //  event.confirm.resolve();
+    //} else {
+    //  event.confirm.reject();
+    //}
   }
 
   onSaveConfirm(event) {
-    console.log("Edit Event In Console")
+    console.log("Edit Event In Console");
     console.log(event);
     event.confirm.resolve();
   }
@@ -60,12 +80,16 @@ export class HomeComponent {
   settings = {
     delete: {
       confirmDelete: true,
+      deleteButtonContent: ' Delete',
     },
     add: {
       confirmCreate: true,
+      cancelButtonContent: ' Cancel',
     },
     edit: {
       confirmSave: true,
+      editButtonContent: ' Edit',
+      cancelButtonContent: ' Cancel',
     },
     columns: {
       resourceType: {

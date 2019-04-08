@@ -22,7 +22,6 @@ namespace DAL.Repositories
 		}
 	}
 
-
 	public class ResourceRepository : IResourceRepository
 	{
 		private readonly IPortalDbConnection _connection;
@@ -33,16 +32,25 @@ namespace DAL.Repositories
 		}
 		public  IEnumerable<DbResource> GetResourceByString(string subStr)
 		{
-			DataSet ret= _connection.GetResourceByString(subStr);// QueryAsync<DbResource>(str);
-
-			//return ret.Tables[0].Select().ToList();
+			DataSet ret= _connection.GetResourceByString(subStr);
 
 			MapperConfiguration configuration= new MapperConfiguration(a => { a.AddProfile(new SimpleInvestorProfile()); });
 			IMapper mapper= configuration.CreateMapper();
-//			List<DbResource> result= mapper.Map<List<DataRow>, List<DbResource>>(new List<DataRow>(ret.Tables[0].Rows.OfType<DataRow>()));
 			List<DbResource> result= mapper.Map<List<DataRow>, List<DbResource>>(new List<DataRow>(ret.Tables[0].Select().ToList()));
 
 			return result;
+		}
+		public  DbResource CreateResource(DbResource res)
+		{
+			 DataSet ret= _connection.CreateResource(res);
+
+			var v = ret.Tables[0].Select().ToList()[0].ItemArray[0];
+			var v1 = ret.Tables[0].Rows[0].ItemArray[0];
+			if ((decimal)v1 == 0)
+			{
+				return new DbResource();
+			}
+			 return res;
 		}
 	}
 }
