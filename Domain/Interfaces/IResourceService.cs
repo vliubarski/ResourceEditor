@@ -8,6 +8,7 @@ namespace DAL
 	{
 		IEnumerable<object> GetAnyResource(string subString);
 		DbResource CreateResource(DbResource newResource);
+		DbResource DeleteResource(DbResource newResource);
 
 	}
 }

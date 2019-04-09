@@ -41,6 +41,13 @@ namespace ResourceEditor.Controllers
 			return new ActionResult<DbResource>(ret);
 		}
 
+		[HttpPost("[action]")]
+		public ActionResult<DbResource> DeleteResource([FromBody] DbResource newResource)
+		{
+			var  ret = _resourceService.DeleteResource(newResource);
+			return new ActionResult<DbResource>(ret);
+		}
+
 		[HttpGet("[action]/{lookFor}")]
 		public IEnumerable<object> Products(string lookFor)
 		{

@@ -78,6 +78,41 @@ namespace DAL.Connections
 			return ds;
 		}
 
+		public bool DeleteResource(DbResource res)
+		{
+			string deleteFromType = $"delete from OBI.RESOURCE_TYPE where RESOURCE_TYPE = '{res.ResourceType}'";
+			string deleteFromKey = $"delete from OBI.RESOURCE_key where RESOURCE_TYPE = '{res.ResourceType}' and RESOURCE_KEY = '{res.ResourceKey}'";
+			string deleteFromText =
+				$"delete from OBI.RESOURCE_TEXT where RESOURCE_VALUE = '{res.ResourceValue}' and CULTURE_ID = (select CULTURE_ID from obi.culture where CULTURE_NAME ='{res.CultureCode}')";
+
+			var cmdDelete = new OracleCommand();
+			cmdDelete.Connection = _connection;
+
+			try
+			{
+				_connection.Open();
+				cmdDelete.CommandText = deleteFromText;
+				cmdDelete.ExecuteNonQuery();
+
+				cmdDelete.CommandText = deleteFromType;
+				cmdDelete.ExecuteNonQuery();
+
+				cmdDelete.CommandText = deleteFromKey;
+				cmdDelete.ExecuteNonQuery();
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+				return false;
+			}
+			finally
+			{
+				cmdDelete.Dispose();
+				_connection.Dispose();
+			}
+			return true;
+		}
+
 		public override string DataSource => _connection.DataSource;
 		public override string ServerVersion => _connection.ServerVersion;
 

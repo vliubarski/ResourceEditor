@@ -52,5 +52,10 @@ namespace DAL.Repositories
 			}
 			 return res;
 		}
+		public  DbResource DeleteResource(DbResource res)
+		{
+			var ret = _connection.DeleteResource(res);
+			 return res;
+		}
 	}
 }

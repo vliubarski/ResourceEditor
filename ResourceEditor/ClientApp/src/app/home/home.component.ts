@@ -52,23 +52,16 @@ export class HomeComponent {
   }
 
   onDeleteConfirm(event) {
-    this.resourceService.createResource(event.newData).subscribe(
+    this.resourceService.deleteResource(event.data).subscribe(
       (data: Product) => {
         if (this.validated(data)) {
-          //this.data.push(data); //this.populateFilter();
-          event.confirm.resolve(event.newData);
+          event.confirm.resolve(event.data);
         }
       },
-      (err: any) => this.errorMessage = err.error
+      (err: any) => this.errorMessage = err.error 
     );
 
-    //console.log("Delete Event In Console");
-    //console.log(event);
-    //if (window.confirm('Are you sure you want to delete?')) {
-    //  event.confirm.resolve();
-    //} else {
-    //  event.confirm.reject();
-    //}
+    //  else event.confirm.reject();
   }
 
   onSaveConfirm(event) {

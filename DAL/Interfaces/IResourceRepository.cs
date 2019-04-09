@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using DAL.Models;
 
 namespace DAL.Interfaces
@@ -12,5 +7,6 @@ namespace DAL.Interfaces
 	{
 		IEnumerable<DbResource> GetResourceByString(string str);
 		DbResource CreateResource(DbResource subStr);
+		DbResource DeleteResource(DbResource subStr);
 	}
 }
