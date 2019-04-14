@@ -40,17 +40,10 @@ namespace DAL.Repositories
 
 			return result;
 		}
-		public  DbResource CreateResource(DbResource res)
+		public bool CreateResource(DbResource res)
 		{
-			 DataSet ret= _connection.CreateResource(res);
+			 return  _connection.CreateResource(res);
 
-			var v = ret.Tables[0].Select().ToList()[0].ItemArray[0];
-			var v1 = ret.Tables[0].Rows[0].ItemArray[0];
-			if ((decimal)v1 == 0)
-			{
-				return new DbResource();
-			}
-			 return res;
 		}
 		public  DbResource DeleteResource(DbResource res)
 		{

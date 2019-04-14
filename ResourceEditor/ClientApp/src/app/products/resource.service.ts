@@ -10,7 +10,7 @@ import { RequestOptions } from '@angular/http';
 export class ResourceService {
   //private products: Product[];
   private getProductsUrl = 'api/SampleData/products';
-  private saveProductsUrl = 'api/SampleData/createResource';
+  private createProductsUrl = 'api/SampleData/createResource';
   private deleteProductsUrl = 'api/SampleData/deleteResource';
 
   constructor(private http: HttpClient) { }
@@ -24,12 +24,11 @@ export class ResourceService {
       );
   }
 
-  createResource(newResource: Product): Observable<Product> {
+  createResource(newResource: Product): Observable<boolean> {
     const options = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
 
-    return this.http.post<Product>(this.saveProductsUrl, newResource, options)
+    return this.http.post<boolean>(this.createProductsUrl, newResource, options)
       .pipe(catchError(this.handleError));
-
   }
 
   deleteResource(deletingResource: Product): Observable<Product> {

@@ -7,7 +7,7 @@ namespace DAL.Interfaces
 	{
 		//IEnumerable<DbResource> GetResourceByString(string str);
 		DataSet GetResourceByString(string str);
-		DataSet CreateResource(DbResource subStr);
+		bool CreateResource(DbResource subStr);
 		bool DeleteResource(DbResource subStr);
 	}
 }

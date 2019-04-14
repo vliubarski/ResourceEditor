@@ -54,8 +54,13 @@ namespace DAL.Connections
 			return ds;
 		}
 
-		public DataSet CreateResource(DbResource res)
+		public bool CreateResource(DbResource res)
 		{
+			if (ResourceExists(res))
+			{
+				return false;
+			}
+
 			string sql = $"SELECT obi.dt_update_resource('{res.ResourceType}', '{res.CultureCode}', '{res.ResourceKey}', '{res.ResourceValue}', 1, 1) AS result FROM dual";
 
 			var cmd = new OracleCommand(sql, _connection) { CommandType = CommandType.Text };
@@ -70,12 +75,38 @@ namespace DAL.Connections
 			catch (Exception e)
 			{
 				Console.WriteLine(e.Message);
+				return false;
 			}
 			finally
 			{
 				_connection.Dispose();
 			}
-			return ds;
+			return true;
+		}
+
+		private bool ResourceExists(DbResource res)
+		{
+			string sql = $"select * from obi.vu_resources where RESOURCE_type = '{res.ResourceType}' " +
+			             $"and RESOURCE_KEY = '{res.ResourceKey}' and CULTURE_CODE = '{res.CultureCode}'";
+			var cmd = new OracleCommand(sql, _connection) {CommandType = CommandType.Text};
+			var dataAdapter = new OracleDataAdapter(cmd);
+			var dt = new DataTable();
+
+			try
+			{
+				_connection.Open();
+				dataAdapter.Fill(dt);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+			}
+			finally
+			{
+				_connection.Dispose();
+			}
+
+			return dt.Rows.Count > 0;
 		}
 
 		public bool DeleteResource(DbResource res)

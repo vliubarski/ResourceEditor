@@ -19,7 +19,7 @@ namespace Domain.Services
 			return _repository.GetResourceByString(subString);
 		}
 
-		public DbResource CreateResource(DbResource newResource)
+		public bool CreateResource(DbResource newResource)
 		{
 			return _repository.CreateResource(newResource);
 		}

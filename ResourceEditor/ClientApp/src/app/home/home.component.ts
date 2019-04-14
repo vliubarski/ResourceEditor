@@ -34,11 +34,13 @@ export class HomeComponent {
 
   onCreateConfirm(event) {
     this.resourceService.createResource(event.newData).subscribe(
-      (data: Product) => {
-        if (this.validated(data)) {
-          //this.data.push(data); //this.populateFilter();
+      (data: boolean) => {
+        if (data) {
           event.confirm.resolve(event.newData);
-        } 
+        } else {
+          window.alert('Cannot create resource!');
+          event.confirm.reject();
+        }
       },
       (err: any) => this.errorMessage = err.error
     );
@@ -52,23 +54,35 @@ export class HomeComponent {
   }
 
   onDeleteConfirm(event) {
-    this.resourceService.deleteResource(event.data).subscribe(
-      (data: Product) => {
-        if (this.validated(data)) {
-          event.confirm.resolve(event.data);
-        }
-      },
-      (err: any) => this.errorMessage = err.error 
-    );
-
-    //  else event.confirm.reject();
+    if (window.confirm('Are you sure you want to delete?')) {
+      this.resourceService.deleteResource(event.data).subscribe(
+        (data: Product) => {
+          if (this.validated(data)) {
+            event.confirm.resolve(event.data);
+          }
+        },
+        (err: any) => this.errorMessage = err.error
+      );
+      event.confirm.resolve();
+    }// else {
+    //  event.confirm.reject();
+    //}
   }
 
-  onSaveConfirm(event) {
-    console.log("Edit Event In Console");
-    console.log(event);
-    event.confirm.resolve();
-  }
+  ////onUpdate(event) {
+  ////  this.resourceService.createResource(event.newData).subscribe(
+  ////    (data: Product) => {
+  ////      if (this.validated(data)) {
+  ////        event.confirm.resolve(event.newData);
+  ////      }
+  ////    },
+  ////    (err: any) => this.errorMessage = err.error
+  ////  );
+
+  //  //console.log("Edit Event In Console");
+  //  //console.log(event);
+  //  //event.confirm.resolve();
+  //}
 
   settings = {
     delete: {

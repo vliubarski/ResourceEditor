@@ -7,7 +7,7 @@ namespace DAL
 	public interface IResourceService
 	{
 		IEnumerable<object> GetAnyResource(string subString);
-		DbResource CreateResource(DbResource newResource);
+		bool CreateResource(DbResource newResource);
 		DbResource DeleteResource(DbResource newResource);
 
 	}

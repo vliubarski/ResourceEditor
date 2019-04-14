@@ -6,7 +6,7 @@ namespace DAL.Interfaces
 	public interface IResourceRepository
 	{
 		IEnumerable<DbResource> GetResourceByString(string str);
-		DbResource CreateResource(DbResource subStr);
+		bool CreateResource(DbResource subStr);
 		DbResource DeleteResource(DbResource subStr);
 	}
 }

@@ -35,10 +35,10 @@ namespace ResourceEditor.Controllers
 		}
 
 		[HttpPost("[action]")]
-		public ActionResult<DbResource> CreateResource([FromBody] DbResource newResource)
+		public ActionResult<bool> CreateResource([FromBody] DbResource newResource)
 		{
 			var  ret = _resourceService.CreateResource(newResource);
-			return new ActionResult<DbResource>(ret);
+			return ret;//new ActionResult<DbResource>(ret);
 		}
 
 		[HttpPost("[action]")]
