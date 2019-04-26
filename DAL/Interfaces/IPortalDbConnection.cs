@@ -6,8 +6,9 @@ namespace DAL.Interfaces
 	public interface IPortalDbConnection: IDbConnection
 	{
 		//IEnumerable<DbResource> GetResourceByString(string str);
-		DataSet GetResourceByString(string str);
-		bool CreateResource(DbResource subStr);
-		bool DeleteResource(DbResource subStr);
+		DataSet GetResource(string str);
+		bool CreateResource(string sqlCommand);
+		bool DeleteResource(string sqlCommand);
+		//bool ResourceExists(string sqlCommand);
 	}
 }

@@ -38,14 +38,13 @@ namespace ResourceEditor.Controllers
 		public ActionResult<bool> CreateResource([FromBody] DbResource newResource)
 		{
 			var  ret = _resourceService.CreateResource(newResource);
-			return ret;//new ActionResult<DbResource>(ret);
+			return ret;
 		}
 
 		[HttpPost("[action]")]
-		public ActionResult<DbResource> DeleteResource([FromBody] DbResource newResource)
+		public ActionResult<bool> DeleteResource([FromBody] DbResource newResource)
 		{
-			var  ret = _resourceService.DeleteResource(newResource);
-			return new ActionResult<DbResource>(ret);
+			return _resourceService.DeleteResource(newResource);
 		}
 
 		[HttpGet("[action]/{lookFor}")]

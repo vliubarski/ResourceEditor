@@ -7,6 +7,6 @@ namespace DAL.Interfaces
 	{
 		IEnumerable<DbResource> GetResourceByString(string str);
 		bool CreateResource(DbResource subStr);
-		DbResource DeleteResource(DbResource subStr);
+		bool  DeleteResource(DbResource subStr);
 	}
 }

@@ -34,7 +34,7 @@ namespace ResourceEditor
 			});
 			services.AddScoped<IResourceService, ResourceService>();
 			services.AddScoped<IResourceRepository, ResourceRepository>();
-			services.AddScoped<IPortalDbConnection, PortalDbConnection>();
+			services.AddScoped<IPortalDbConnection, PortalDbConnection>(x=> new PortalDbConnection("Data Source=STAGING_12C.WORLD;User Id=OBI;Password=OBI;"));
 			
 
 		}
