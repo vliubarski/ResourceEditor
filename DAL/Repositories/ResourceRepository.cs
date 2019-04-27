@@ -82,6 +82,25 @@ namespace DAL.Repositories
 			}
 		}
 
+		public bool UpdateResource(DbResource res)
+		{
+			try
+			{
+				_connection.Open();
+				string sqlCommand = $"SELECT obi.dt_update_resource('{res.ResourceType}', '{res.CultureCode}', '{res.ResourceKey}', '{res.ResourceValue}', 1, 1) AS result FROM dual";
+				return _connection.CreateResource(sqlCommand);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+				throw;
+			}
+			finally
+			{
+				_connection.Close();
+			}
+		}
+
 		private int EntryNumber(DbResource res)
 		{
 			string sqlCommand = $"select * from obi.vu_resources where RESOURCE_type = '{res.ResourceType}' " +

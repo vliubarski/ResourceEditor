@@ -12,6 +12,7 @@ export class ResourceService {
   private getProductsUrl = 'api/SampleData/products';
   private createProductsUrl = 'api/SampleData/createResource';
   private deleteProductsUrl = 'api/SampleData/deleteResource';
+  private updateProductsUrl = 'api/SampleData/updateResource';
 
   constructor(private http: HttpClient) { }
 
@@ -28,6 +29,13 @@ export class ResourceService {
     const options = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
 
     return this.http.post<boolean>(this.createProductsUrl, newResource, options)
+      .pipe(catchError(this.handleError));
+  }
+
+  updateResource(newResource: Product): Observable<boolean> {
+    const options = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
+
+    return this.http.post<boolean>(this.updateProductsUrl, newResource, options)
       .pipe(catchError(this.handleError));
   }
 

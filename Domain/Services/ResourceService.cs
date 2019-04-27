@@ -24,6 +24,11 @@ namespace Domain.Services
 			return _repository.CreateResource(newResource);
 		}
 
+		public bool UpdateResource(DbResource newResource)
+		{
+			return _repository.UpdateResource(newResource);
+		}
+
 		public bool DeleteResource(DbResource newResource)
 		{
 			return _repository.DeleteResource(newResource);

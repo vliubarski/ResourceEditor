@@ -54,35 +54,37 @@ export class HomeComponent {
   }
 
   onDeleteConfirm(event) {
-    if (window.confirm('Are you sure you want to delete?')) {
+    if (!window.confirm('Are you sure you want to delete?')) {
+      return;
+    }
       this.resourceService.deleteResource(event.data).subscribe(
         (data: Product) => {
-          if (this.validated(data)) {
+          if (data) {
             event.confirm.resolve(event.data);
+          } else {
+            event.confirm.reject();
           }
         },
         (err: any) => this.errorMessage = err.error
       );
       event.confirm.resolve();
-    }// else {
-    //  event.confirm.reject();
-    //}
   }
 
-  ////onUpdate(event) {
-  ////  this.resourceService.createResource(event.newData).subscribe(
-  ////    (data: Product) => {
-  ////      if (this.validated(data)) {
-  ////        event.confirm.resolve(event.newData);
-  ////      }
-  ////    },
-  ////    (err: any) => this.errorMessage = err.error
-  ////  );
-
-  //  //console.log("Edit Event In Console");
-  //  //console.log(event);
-  //  //event.confirm.resolve();
-  //}
+  onUpdate(event) {
+    if (!window.confirm('You are about to Update this resource. Continue?')) {
+      return;
+    }
+    this.resourceService.updateResource(event.newData).subscribe(
+      (data: boolean) => {
+        if (data) {
+          event.confirm.resolve(event.newData);
+        } else {
+          event.confirm.reject();
+        }
+      },
+      (err: any) => this.errorMessage = err.error
+    );
+  }
 
   settings = {
     delete: {
@@ -92,11 +94,16 @@ export class HomeComponent {
     add: {
       confirmCreate: true,
       cancelButtonContent: ' Cancel',
+      createButtonContent: 'Create '
     },
     edit: {
       confirmSave: true,
-      editButtonContent: ' Edit',
-      cancelButtonContent: ' Cancel',
+      editButtonContent: 'Edit',
+      saveButtonContent:'Update',
+      cancelButtonContent: ' Cancel'
+      //editButtonContent: '<i class="nb-edit">Edit </i>',
+      //saveButtonContent: '<i class="nb-close">Update </i>',
+      //cancelButtonContent: '<i class="nb-close"> Cancel</i>',
     },
     columns: {
       resourceType: {

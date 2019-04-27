@@ -42,6 +42,13 @@ namespace ResourceEditor.Controllers
 		}
 
 		[HttpPost("[action]")]
+		public ActionResult<bool> UpdateResource([FromBody] DbResource newResource)
+		{
+			var  ret = _resourceService.UpdateResource(newResource);
+			return ret;
+		}
+
+		[HttpPost("[action]")]
 		public ActionResult<bool> DeleteResource([FromBody] DbResource newResource)
 		{
 			return _resourceService.DeleteResource(newResource);
