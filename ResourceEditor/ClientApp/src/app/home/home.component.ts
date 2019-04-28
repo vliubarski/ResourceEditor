@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ResourceService } from '../products/resource.service';
 import { Product, Filter } from '../products/product';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-home',
@@ -12,12 +13,15 @@ export class HomeComponent {
   filter: Filter[];
   errorMessage: string;
 
-  constructor(private resourceService: ResourceService) {
+  constructor(private resourceService: ResourceService, private spinner: NgxSpinnerService) {
   }
 
   onSearch(lookFor: string = '') {
+    this.spinner.show();
     this.resourceService.getProducts(lookFor).subscribe(
-      (data: Product[]) => { this.data = data; this.populateFilter(); },
+      (data: Product[]) => {
+        this.data = data; this.populateFilter(); this.spinner.hide();
+      },
       (err: any) => this.errorMessage = err.error
     );
   }
@@ -57,17 +61,17 @@ export class HomeComponent {
     if (!window.confirm('Are you sure you want to delete?')) {
       return;
     }
-      this.resourceService.deleteResource(event.data).subscribe(
-        (data: Product) => {
-          if (data) {
-            event.confirm.resolve(event.data);
-          } else {
-            event.confirm.reject();
-          }
-        },
-        (err: any) => this.errorMessage = err.error
-      );
-      event.confirm.resolve();
+    this.resourceService.deleteResource(event.data).subscribe(
+      (data: Product) => {
+        if (data) {
+          event.confirm.resolve(event.data);
+        } else {
+          event.confirm.reject();
+        }
+      },
+      (err: any) => this.errorMessage = err.error
+    );
+    event.confirm.resolve();
   }
 
   onUpdate(event) {
@@ -99,15 +103,12 @@ export class HomeComponent {
     edit: {
       confirmSave: true,
       editButtonContent: 'Edit',
-      saveButtonContent:'Update',
+      saveButtonContent: 'Update',
       cancelButtonContent: ' Cancel'
-      //editButtonContent: '<i class="nb-edit">Edit </i>',
-      //saveButtonContent: '<i class="nb-close">Update </i>',
-      //cancelButtonContent: '<i class="nb-close"> Cancel</i>',
     },
     columns: {
       resourceType: {
-        title: 'Type'
+        title: 'Type', editable: false
       },
       resourceKey: {
         title: 'Key', editable: false
