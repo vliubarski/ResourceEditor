@@ -16,7 +16,10 @@ export class HomeComponent {
   constructor(private resourceService: ResourceService, private spinner: NgxSpinnerService) {
   }
 
-  onSearch(lookFor: string = '') {
+  onSearch(lookFor: string) {
+    if (lookFor === "") {
+      return;
+    }
     this.spinner.show();
     this.resourceService.getProducts(lookFor).subscribe(
       (data: Product[]) => {
